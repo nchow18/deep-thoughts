@@ -17,9 +17,19 @@ import ApolloClient from 'apollo-boost';
 
 // used to establish new connection to the GraphQL server using Apollo
 // uri: Uniform Resource Identifier
+// verifies id_token in localStorage for session use
 const client = new ApolloClient({
+  request: operation => {
+    const token = localStorage.getItem('id_token');
+
+    operation.setContext({
+      headers: {
+        authorization: token ? `Bearer ${token}` : ''
+      }
+    });
+  },
   uri: '/graphql'
-})
+});
 
 function App() {
   return (
